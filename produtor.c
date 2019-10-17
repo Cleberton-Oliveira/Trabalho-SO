@@ -3,16 +3,17 @@
 #include <pthread.h> 
 #include <stdio.h> 
 
-#define NUM_REPETICOES  1000
+#define NUM_REPETICOES  10
 
 pthread_t prod0, prod1, prod2;  
- 
+int novaMusica;
+
 void *criaMusica(){  
   for (long i = 0; i < NUM_REPETICOES; i++){
-    
+    // espera 5 segundos 
 	//traca o sistema com semaforo 
-	// espera 5 segundos 
 	// cria nova musica 
+	// novaMusica++;
 	// destranca o sistema 
   }
   printf("Criado uma nova musica\n");
