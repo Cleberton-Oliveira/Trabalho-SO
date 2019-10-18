@@ -3,10 +3,9 @@
 #include <stdio.h> 
 
 #define NUM_REPETICOES  10
-
 pthread_t prod0, prod1, prod2;  
 int novaMusica = 0;
-
+pid_t pid;
 
 typedef struct { 
     char nomeMusica[30]; 
@@ -31,14 +30,46 @@ Musica SetMusica(char nomeMusica, char autorMusica, char generoMusica, char dura
 
 void *criaMusica(){  
   for (long i = 0; i < NUM_REPETICOES; i++){
-    // espera 5 segundos 
+  
+    // espera 3 segundos 
+	sleep(3);
 	//traca o sistema com semaforo 
-	// cria nova musica 
-  	SetMusica('Dogs', 'Pink Floyd', 'Rock', '3:14');
-	// novaMusica++;
-	// destranca o sistema 
+	
+	// cria nova musica
+	novaMusica++;
+	char caractere = novaMusica+'0'; 
+    
+    pid = fork();
+    switch(pid) {
+	    case -1:
+	    	nomeMusica = "Musica\n", caractere; 
+	        autorMusica = "Pink Floyd\n";
+	        generoMusica = "Rock\n";
+	        duracao = "11:26";
+	        break;
+	    case 0:
+	    	nomeMusica = "Musica\n", caractere; 
+	        autorMusica = "Jorge e Matheus\n";
+	        generoMusica = "Sertanejo\n";
+	        duracao = "4:42";
+	        break;
+	    default:
+	        nomeMusica = "Musica\n", caractere; 
+	        autorMusica = "Mc Kevinho\n";
+	        generoMusica = "Funk\n";
+	        duracao = "3:02"
+	        break;
+    }
+
+  	SetMusica(nomeMusica, autorMusica, generoMusica, duracao);
+	// add musica ao array;
+
+
+	// destranca o sistema
+
+
   }
-  printf("Criado uma nova musica\n");
+ 	printf("Criado uma nova musica\n");
 }
 
 

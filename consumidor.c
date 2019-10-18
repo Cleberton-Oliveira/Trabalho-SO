@@ -2,19 +2,21 @@
 #include <pthread.h> 
 #include <stdio.h> 
 #include <unistd.h>
+#include <sys/sem.h>
 
 #define NUM_REPETICOES  30
 
 pthread_t reprodutor; 
 int musica = 0;
 
+
 void *reproduzMusica(){  
   for (long i = 0; i < NUM_REPETICOES; i++){
     // espera 5 segundos 
-  	unsigned sleep(500);
+  	sleep(3);
 	//traca o sistema com semaforo 
 
-	// reproduz a musica
+	// recupera musica no sistema
 
 	// imprime a musica que preoduziu
 	printf("Está escutando a musica: %s\n")
@@ -22,18 +24,20 @@ void *reproduzMusica(){
 	printf("Autor da Musica: %s\n", autorMusica);
 	printf("Genero da Musuca %s\n", generoMusica);
 	printf("Tempo de duração: %s\n", duracao);
-	// musica++
+	
+	// proxima musica
 	musica++;
 	// destranca o sistema 
+
   }
-  printf("Já reproduziu a musica\n");
+  printf("Fim da musica\n");
 
 }
 
 
 int main(){ 
-   pthread_create(&reprodutor, NULL, reproduzMusica, NULL) ; 
+   pthread_create(&reprodutor, NULL, reproduzMusica, NULL)v; 
    pthread_join(reprodutor,NULL);  
    printf("Fim do programa"); 
    return 0;
-}
+}; 
