@@ -1,8 +1,12 @@
 // Trabalo SO Produtor de Musica 
 #include <pthread.h> 
 #include <stdio.h> 
-#include <string.h>//necessário para strcmp
 #include <unistd.h>
+
+
+#include <sys/shm.h>
+
+
 
 #define NUM_REPETICOES  10
 pthread_t prod0, prod1, prod2;  
@@ -56,7 +60,7 @@ void *criaMusica(void* thread ){
 		}      
     
     }
-	// add musica ao array;
+	// passar musica por pipe;
 
 	// destranca o sistema
  	printf("Criado uma nova musica\n");
@@ -64,6 +68,10 @@ void *criaMusica(void* thread ){
 
 
 int main(){ 
+
+   void *shmat(int shm_id, const void *shm_addr, int shmflg);
+
+
    pthread_create(&prod0, NULL, criaMusica,  (void *)"Rock") ; 
    pthread_create(&prod1, NULL, criaMusica,  (void *)"Sertanejo") ; 
    pthread_create(&prod2, NULL, criaMusica,  (void *)"Funk") ; 

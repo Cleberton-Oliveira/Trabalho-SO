@@ -16,7 +16,7 @@ void *reproduzMusica(){
   	sleep(3);
 	//traca o sistema com semaforo 
 
-	//recupera musica no sistema
+	//receber musica por pipe
 
 	// imprime a musica que preoduziu
 	printf("Está escutando a musica: %s\n")
@@ -36,6 +36,10 @@ void *reproduzMusica(){
 
 
 int main(){ 
+
+	int shmdt(const void *shm_addr);
+
+
    pthread_create(&reprodutor, NULL, reproduzMusica, NULL)v; 
    pthread_join(reprodutor,NULL);  
    printf("Fim do programa"); 
