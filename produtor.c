@@ -26,17 +26,19 @@ void *criaMusica(void* thread ){
 	//traca o sistema com semaforo 
 
 	// cria nova musica
-	novaMusica++;
-	// char caractere = novaMusica+'0'; 
+	
+
+		// novaMusica++;
+		// char caractere = novaMusica+'0'; 
     
-    if(valor == "primeiro") {
+    if(valor == "Rock") {
 	    	struct musica musicaRock;
 	    	musicaRock.nomeMusica = "Musica Rock \n"; 
 	        musicaRock.autorMusica = "Pink Floyd\n";
 	        musicaRock.generoMusica = "Rock\n";
 	        musicaRock.duracao = "11:26\n";
 	   
-	   }else if(valor == "segundo"){
+	   }else if(valor == "Sertanejo"){
 	  
 	    	struct musica musicaSertanejo;
 	    	musicaSertanejo.nomeMusica = "Musica Sertanejo \n"; 
@@ -62,9 +64,9 @@ void *criaMusica(void* thread ){
 
 
 int main(){ 
-   pthread_create(&prod0, NULL, criaMusica,  (void *)"primeiro") ; 
-   pthread_create(&prod1, NULL, criaMusica,  (void *)"segundo") ; 
-   pthread_create(&prod2, NULL, criaMusica,  (void *)"terceiro") ; 
+   pthread_create(&prod0, NULL, criaMusica,  (void *)"Rock") ; 
+   pthread_create(&prod1, NULL, criaMusica,  (void *)"Sertanejo") ; 
+   pthread_create(&prod2, NULL, criaMusica,  (void *)"Funk") ; 
    pthread_join(prod0,NULL);  
    pthread_join(prod1,NULL);
    pthread_join(prod2,NULL); 
