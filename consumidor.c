@@ -12,11 +12,11 @@ int musica = 0;
 
 void *reproduzMusica(){  
   for (long i = 0; i < NUM_REPETICOES; i++){
-    // espera 5 segundos 
+    // espera 3 segundos 
   	sleep(3);
 	//traca o sistema com semaforo 
 
-	// recupera musica no sistema
+	//recupera musica no sistema
 
 	// imprime a musica que preoduziu
 	printf("Está escutando a musica: %s\n")
