@@ -3,6 +3,7 @@
 #include <stdio.h> 
 #include <unistd.h>
 #include <sys/sem.h>
+#include "semun.h"
 
 #define NUM_REPETICOES  30
 
@@ -16,7 +17,9 @@ void *reproduzMusica(){
   	sleep(3);
 	//traca o sistema com semaforo 
 
-	//receber musica por pipe
+	//receber musica por mensagem
+
+	receive(produtor, mensagem)
 
 	// imprime a musica que preoduziu
 	printf("Está escutando a musica: %s\n")
