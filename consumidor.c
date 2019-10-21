@@ -1,50 +1,38 @@
-// Trabalo SO Consumidor de Musica 
-#include <pthread.h> 
+// C Program for Message Queue (Reader Process) 
 #include <stdio.h> 
-#include <unistd.h>
-#include <sys/sem.h>
-#include "semun.h"
-
-#define NUM_REPETICOES  30
-
-pthread_t reprodutor; 
-int musica = 0;
-
-
-void *reproduzMusica(){  
-  for (long i = 0; i < NUM_REPETICOES; i++){
-    // espera 3 segundos 
-  	sleep(3);
-	//traca o sistema com semaforo 
-
-	//receber musica por mensagem
-
-	receive(produtor, mensagem)
-
-	// imprime a musica que preoduziu
-	printf("Está escutando a musica: %s\n")
-	printf("Nome da Musica: %s\n", nomeMusica);
-	printf("Autor da Musica: %s\n", autorMusica);
-	printf("Genero da Musuca %s\n", generoMusica);
-	printf("Tempo de duração: %s\n", duracao);
-	
-	// proxima musica
-	musica++;
-	// destranca o sistema 
-
-  }
-  printf("Fim da musica\n");
-
-}
-
-
-int main(){ 
-
-	int shmdt(const void *shm_addr);
-
-
-   pthread_create(&reprodutor, NULL, reproduzMusica, NULL)v; 
-   pthread_join(reprodutor,NULL);  
-   printf("Fim do programa"); 
-   return 0;
-}; 
+#include <sys/ipc.h> 
+#include <sys/msg.h> 
+  
+// structure for message queue 
+struct musica { 
+    long mesg_type; 
+    char *nomeMusica; 
+    char *autorMusica;   
+    char *generoMusica;
+    char *duracao; 
+}new_musica;
+  
+int main() 
+{ 
+    key_t key; 
+    int msgid; 
+  
+    // ftok to generate unique key 
+    key = ftok("progfile", 65); 
+  
+    // msgget creates a message queue 
+    // and returns identifier 
+    msgid = msgget(key, 0666 | IPC_CREAT); 
+  
+    // msgrcv to receive message 
+    msgrcv(msgid, &new_musica, sizeof(new_musica), 1, 0); 
+  
+    // display the message 
+    printf("Data Received is : %s \n",  
+                    new_musica.nomeMusica); 
+  
+    // to destroy the message queue 
+    msgctl(msgid, IPC_RMID, NULL); 
+  
+    return 0; 
+} 

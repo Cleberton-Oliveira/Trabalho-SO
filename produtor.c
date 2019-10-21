@@ -3,6 +3,8 @@
 #include <stdlib.h>
 #include <pthread.h>
 #include <string.h>
+#include <sys/ipc.h> 
+#include <sys/msg.h> 
 
 
 int novaMusica = 0;
@@ -19,7 +21,37 @@ int lots_of_threads;
 
 void *criaMusica(void *arg);
 
+
+struct musica { 
+	long mesg_type; 
+    char *nomeMusica; 
+    char *autorMusica;   
+    char *generoMusica;
+    char *duracao; 
+}new_musica;
+
+
+
 int main(){ 
+
+
+
+
+	key_t key; 
+ 	int msgid;
+ 	key = ftok("progfile", 65); 
+    msgid = msgget(key, 0666 | IPC_CREAT); 
+    new_musica.mesg_type = 1; 
+    printf("Write Data : "); 
+    	gets(new_musica.nomeMusica); 
+  
+    // msgsnd to send message 
+    msgsnd(msgid, &new_musica, sizeof(new_musica), 0); 
+  
+    // display the message 
+    printf("Data send is : %s \n", new_musica.nomeMusica); 
+ 
+
 
    for(lots_of_threads = 0; lots_of_threads < NUM_THREADS; lots_of_threads++) {
         res = pthread_create(&(produtor[lots_of_threads]), NULL, criaMusica, (void *)&lots_of_threads);
@@ -28,6 +60,7 @@ int main(){
             exit(EXIT_FAILURE);
         };
         sleep(1);
+
 
     printf("Esperando por thread finalizar...\n");
     for(lots_of_threads = NUM_THREADS - 1; lots_of_threads >= 0; lots_of_threads--) {
@@ -38,19 +71,17 @@ int main(){
            perror("Thread falhou no join");
         };
     };
+
+
+
     printf("Todas terminaram\n");
     exit(EXIT_SUCCESS);
 
    printf("Fim do programa"); 
    return 0;
-};
-};
-struct musica { 
-    char *nomeMusica; 
-    char *autorMusica;   
-    char *generoMusica;
-    char *duracao; 
-};
+	};
+}
+
 
 void *criaMusica(void *arg){  
   while(1){
