@@ -23,18 +23,13 @@ int main(int argc, char * argv[]) {
     key_t key;
     int msgid;
 
-    // ftok gera identificador unico
     key = ftok("progfile", 65);
-
-
     msgid = msgget(key, IPC_CREAT | 0666);
 
-    // msgrcv to receive message
-     printf("%ld", sizeof( new_musica)-sizeof(long));
-     msgrcv(msgid, &new_musica, (sizeof( new_musica)-sizeof(long)), 1, 0);
+    printf("%ld", sizeof( new_musica)-sizeof(long));
+    msgrcv(msgid, &new_musica, (sizeof( new_musica)-sizeof(long)), 1, 0);
 
     while( msgrcv(msgid, &new_musica, (sizeof( new_musica)-sizeof(long)), 1, 0) != -1){
-
 
         printf("Musica: %s\n"
         "Autor: %s\n"
@@ -46,9 +41,6 @@ int main(int argc, char * argv[]) {
         new_musica.duracao
 
         );
-
-    // to destroy the message queue
-    //msgctl(msgid, IPC_RMID, NULL);
     }
 
     printf("saiu");

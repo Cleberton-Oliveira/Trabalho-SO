@@ -5,6 +5,7 @@
 #include <string.h>
 #include <sys/ipc.h>
 #include <sys/msg.h>
+#include <semaphore.h>
 
 
 
@@ -20,8 +21,7 @@ int res;
 pthread_t produtor[NUM_THREADS];
 void *thread_result;
 int lots_of_threads;
-
-
+sem_t sem;
 
 struct musica {
 	long mesg_type;
@@ -35,8 +35,6 @@ struct musica {
 key_t key;
 int msgid;
 
-
-
 void *criaMusica(void *arg) {
   while(1){
 
@@ -45,17 +43,15 @@ void *criaMusica(void *arg) {
 
 	//instacia de Musica
 	struct musica new_musical;
-
 	new_musical.mesg_type = 1;
 	sprintf(new_musical.nomeMusica, "%s", nome[rand() % 6]);
-
 	sprintf(new_musical.autorMusica, "%s", autor[rand() % 6]);
-
 	sprintf(new_musical.generoMusica, "%s", tipo_musica[rand() % 6]);
     sprintf(new_musical.duracao, "%s", tempo[rand() % 6]);
 
-
-
+    // Uso do semaphoro para imprimir certo na tela         
+    sem_wait(&sem); 
+    // Imprime a musica 
     printf("==========================================================\n");
 	printf("CRIANDO NOVA MUSICA:\n");
 	printf("................................\n");
@@ -68,12 +64,12 @@ void *criaMusica(void *arg) {
     new_musical.generoMusica,
     new_musical.duracao
     );
+    sem_post(&sem);
 
-
-    //send the message
+    // Envia a mensagem 
     msgsnd(msgid, &new_musical, sizeof(new_musical)-sizeof(long), 0);
 
-    // display the message
+    // Imprime a mensagem
     printf("Criando nova Musica : %s \n", new_musical.nomeMusica);
 
 	};
@@ -81,8 +77,8 @@ void *criaMusica(void *arg) {
 
 
 int main(){
-
-
+    // inicializa semaphoro sem
+    sem_init(&sem, 0, 1);
     // ftok gera uma key unica. Ambos os processos usam o mesmo valor de key.
     key = ftok("progfile", 65);
 
@@ -91,19 +87,17 @@ int main(){
     msgid = msgget(key, IPC_CREAT | 0666);
 
    for(lots_of_threads = 0; lots_of_threads < NUM_THREADS; lots_of_threads++) {
-        res = pthread_create(&(produtor[lots_of_threads]), NULL, criaMusica, (void *)&lots_of_threads);
-
-
+        res = pthread_create(&(produtor[lots_of_threads]), NULL, criaMusica, NULL);
         if (res != 0) {
             perror("Criacao de Thread falhou");
             exit(EXIT_FAILURE);
         };
-
-        sleep(1);
- 	 }
+    sleep(1);
+ 	
+    };
 
     printf("Esperando por thread finalizar...\n");
-    for(lots_of_threads = NUM_THREADS - 1; lots_of_threads >= 0; lots_of_threads--) {
+    for(lots_of_threads = NUM_THREADS - 1; lots_of_threads >= 0; lots_of_threads--){
         res = pthread_join(produtor[lots_of_threads], &thread_result);
         if (res == 0) {
             printf("Pegou uma thread\n");
@@ -116,7 +110,7 @@ int main(){
     printf("Todas terminaram\n");
     exit(EXIT_SUCCESS);
 
-   printf("Fim do programa");
-   return 0;
+    printf("Fim do programa");
+        return 0;
 
-	};
+	}
